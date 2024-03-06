@@ -12,13 +12,16 @@ from torchvision import datasets
 from torchvision import transforms
 import torch.onnx
 
-import neural_style.utils as utils
-from neural_style.transformer_net import TransformerNet
-from neural_style.vgg import Vgg16
+import utils as utils
+from transformer_net import TransformerNet
+from vgg import Vgg16
+import streamlit as st
+
 
 
 device = torch.device("cuda" if torch.cuda.is_available else "cpu")
 
+@st.cache
 def load_model(model_path):
     with torch.no_grad():
         style_model = TransformerNet()
@@ -29,10 +32,9 @@ def load_model(model_path):
             if re.search(r'in\d+\.running_(mean|var)$', k):
                 del state_dict[k]
         style_model.load_state_dict(state_dict)
-        style_model.to(device)
     return style_model
 
-
+@st.cache
 def stylize(style_model, content_image, output_image):
 
     content_image = utils.load_image(content_image)
@@ -41,7 +43,7 @@ def stylize(style_model, content_image, output_image):
         transforms.Lambda(lambda x: x.mul(255))
     ])
     content_image = content_transform(content_image)
-    content_image = content_image.unsqueeze(0).to(device)
+    content_image = content_image.unsqueeze(0)
 
 
     with torch.no_grad():
