@@ -16,12 +16,13 @@ import utils as utils
 from transformer_net import TransformerNet
 from vgg import Vgg16
 import streamlit as st
+from PIL import Image
 
 
 
 device = torch.device("cuda" if torch.cuda.is_available else "cpu")
 
-@st.cache
+# @st.cache_data
 def load_model(model_path):
     with torch.no_grad():
         style_model = TransformerNet()
@@ -34,16 +35,32 @@ def load_model(model_path):
         style_model.load_state_dict(state_dict)
     return style_model
 
-@st.cache
+# @st.cache_data
 def stylize(style_model, content_image, output_image):
+    # Check if content_image is a string (path) or already a PIL Image
+    if isinstance(content_image, str):
+        content_image_pil = Image.open(content_image).convert('RGB')
+    elif isinstance(content_image, Image.Image):
+        content_image_pil = content_image
+    else:
+        raise ValueError("content_image must be a filepath (str) or a PIL.Image object")
 
-    content_image = utils.load_image(content_image)
+    # Proceed with transformations and styling as before
     content_transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Lambda(lambda x: x.mul(255))
     ])
-    content_image = content_transform(content_image)
+    content_image = content_transform(content_image_pil)
     content_image = content_image.unsqueeze(0)
+
+
+    # content_image = utils.load_image(content_image)
+    # content_transform = transforms.Compose([
+    #     transforms.ToTensor(),
+    #     transforms.Lambda(lambda x: x.mul(255))
+    # ])
+    # content_image = content_transform(content_image)
+    # content_image = content_image.unsqueeze(0)
 
 
     with torch.no_grad():

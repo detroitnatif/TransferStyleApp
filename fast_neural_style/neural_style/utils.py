@@ -11,11 +11,19 @@ def load_image(filename, size=None, scale=None):
     return img
 
 
+# def save_image(filename, data):
+#     img = data.clone().clamp(0, 255).numpy()
+#     img = img.transpose(1, 2, 0).astype("uint8")
+#     img = Image.fromarray(img)
+#     img.save(filename)
+
+from torchvision.utils import save_image as torch_save_image
+
 def save_image(filename, data):
-    img = data.clone().clamp(0, 255).numpy()
-    img = img.transpose(1, 2, 0).astype("uint8")
-    img = Image.fromarray(img)
-    img.save(filename)
+    # Assuming `data` is a PyTorch tensor.
+    # Convert tensor to PIL Image and save it.
+    torch_save_image(data, filename)
+
 
 
 def gram_matrix(y):
