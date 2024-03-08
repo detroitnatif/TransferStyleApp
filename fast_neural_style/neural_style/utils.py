@@ -20,9 +20,9 @@ def load_image(filename, size=None, scale=None):
 from torchvision.utils import save_image as torch_save_image
 
 def save_image(filename, data):
-    # Assuming `data` is a PyTorch tensor.
-    # Convert tensor to PIL Image and save it.
+    data = data.clamp(0, 255) / 255
     torch_save_image(data, filename)
+    
 
 
 

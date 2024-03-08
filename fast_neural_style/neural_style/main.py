@@ -33,7 +33,9 @@ uploaded_file = st.file_uploader(label="Upload an image")
 
 if uploaded_file is not None:
     # Display the uploaded file
+   
     input_image = Image.open(uploaded_file)
+    input_image = input_image.resize((256, 256), Image.ANTIALIAS)
     st.image(input_image, caption='Uploaded Image.', use_column_width=True, width=200)
     output_image = "../images/output-images/" + style_name + "-" + uploaded_file.name
 

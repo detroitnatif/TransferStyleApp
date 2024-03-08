@@ -46,6 +46,7 @@ def stylize(style_model, content_image, output_image):
         raise ValueError("content_image must be a filepath (str) or a PIL.Image object")
 
     # Proceed with transformations and styling as before
+    content_image_pil = content_image_pil.resize((256, 256), Image.ANTIALIAS)
     content_transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Lambda(lambda x: x.mul(255))
