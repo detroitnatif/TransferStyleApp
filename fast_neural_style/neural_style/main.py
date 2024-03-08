@@ -25,7 +25,7 @@ if img:
     input_image = "../images/content-images/" + img
     output_image = "../images/output-images/" + style_name + "-" + img
     image = Image.open(input_image)
-    st.image(image, width=400)
+    a = st.image(image, width=400)
 
 
 st.write("### Or upload your own image")
@@ -44,6 +44,7 @@ model = "../saved_models/" + style_name + ".pth"
 clicked = st.button("# Stylize Image")
 
 if clicked:
+    
     model = style.load_model(model)
     style.stylize(model, input_image, output_image)
     st.write("### Output Image:")

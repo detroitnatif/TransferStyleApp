@@ -20,8 +20,15 @@ def load_image(filename, size=None, scale=None):
 from torchvision.utils import save_image as torch_save_image
 
 def save_image(filename, data):
-    data = data.clamp(0, 255) / 255
-    torch_save_image(data, filename)
+    # Ensure data is in CPU memory and remove any batch dimension by selecting the first image
+    img = data.cpu().squeeze(0).clone().clamp(0, 255)
+    
+    # Convert to numpy array
+    img = img.permute(1, 2, 0).numpy().astype("uint8")
+    
+    # Convert numpy array to PIL Image and save
+    img = Image.fromarray(img)
+    img.save(filename)
     
 
 
